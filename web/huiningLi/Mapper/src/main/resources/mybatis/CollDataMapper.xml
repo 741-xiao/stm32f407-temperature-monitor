@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hunau.mapper.CollDataMapper">
+    <select id="selectAllCollData" resultType="com.hunau.domain.CollData">
+        SELECT id, temp, hum, threshold, alarm, ip,
+               DATE_FORMAT(colltime, '%Y-%m-%d %H:%i:%s') AS colltime
+        FROM sht30_samples ORDER BY id DESC LIMIT 1000
+    </select>
+    <insert id="insertCollData" parameterType="com.hunau.domain.CollData" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sht30_samples (temp, hum, threshold, alarm, ip, colltime)
+        VALUES (#{temp}, #{hum}, #{threshold}, #{alarm}, #{ip}, #{colltime})
+    </insert>
+</mapper>

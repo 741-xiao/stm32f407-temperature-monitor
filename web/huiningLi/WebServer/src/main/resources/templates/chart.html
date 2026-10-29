@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17816c">
+  <title>历史曲线 · SHT30 温湿度监测</title>
+  <link rel="icon" href="/img/sense.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/dashboard.css?v=20260919">
+  <script defer src="/js/echarts.min.js"></script>
+  <script defer src="/js/dashboard.js?v=20260919"></script>
+</head>
+<body data-page="history">
+  <a class="skip-link" href="#main">跳转到主要内容</a>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="SENSE 环境监测首页"><span class="brand-mark" data-icon="pulse"></span><span>SENSE<span class="brand-sub">温湿度采集系统</span></span></a>
+    <div class="nav-label">工作空间 <span>WORKSPACE</span></div>
+    <nav aria-label="主导航">
+      <a class="nav-link" href="/"><span data-icon="grid"></span>实时概览</a>
+      <a class="nav-link active" href="/chart" aria-current="page"><span data-icon="chart"></span>历史曲线<span class="nav-dot"></span></a>
+      <a class="nav-link" href="/#records"><span data-icon="database"></span>采集记录</a>
+    </nav>
+    <div class="sidebar-note"><div class="note-orbit"><span data-icon="leaf"></span><i></i><i></i></div><strong>感知环境的每一刻</strong><p>让数据连接物理世界，<br>让细微变化清晰可见。</p><span class="note-label">ENVIRONMENT · CONNECTED</span></div>
+    <div class="profile"><span class="avatar">肖</span><div><strong><span th:text="${developerName}">肖肃</span> <span>开发者</span></strong><small th:text="${studentId}">202440700102</small></div></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb"><span data-icon="layers"></span>温湿度监测平台<span>/</span><strong>历史曲线</strong></div><time id="today" class="today"></time></header>
+    <main id="main">
+      <div class="page-heading"><div><div class="eyebrow">EVERY CHANGE TELLS A STORY</div><h1>回看环境的每一次变化<span class="heading-dot">.</span></h1><p>沿着数据的轨迹，发现环境变化的规律。</p></div><div class="heading-actions"><button id="auto-refresh" class="button auto-button" aria-pressed="true"><span class="status-dot"></span><span id="auto-label">自动刷新 · 2 秒</span></button><button id="refresh" class="button primary"><span data-icon="refresh"></span>立即刷新</button></div></div>
+      <div id="error-banner" class="error-banner" role="alert" hidden><span data-icon="info"></span><span id="error-text"></span><button id="retry" class="text-button">重新加载</button></div>
+      
+      <section class="metrics-grid history-summary" aria-label="当前范围统计">
+        <article class="metric-card teal"><div class="metric-top"><span>当前范围记录</span><span class="metric-icon" data-icon="database"></span></div><div class="metric-value"><strong id="history-count">0</strong><span>条</span></div><p class="metric-note">按采集顺序展示</p></article>
+        <article class="metric-card coral"><div class="metric-top"><span>最高温度</span><span class="metric-icon" data-icon="thermometer"></span></div><div class="metric-value"><strong id="history-max-temp">--</strong><span>℃</span></div><p class="metric-note">当前范围内的最高读数</p></article>
+        <article class="metric-card blue"><div class="metric-top"><span>平均湿度</span><span class="metric-icon" data-icon="droplet"></span></div><div class="metric-value"><strong id="history-avg-hum">--</strong><span>%RH</span></div><p class="metric-note">当前范围内的平均读数</p></article>
+        <article class="metric-card amber"><div class="metric-top"><span>最近采集时间</span><span class="metric-icon" data-icon="clock"></span></div><div class="metric-value time-value"><strong id="history-last-time">--:--:--</strong><span></span></div><p id="history-last-date" class="metric-note">等待采集</p></article>
+      </section>
+      <div class="history-toolbar"><div><h2>传感器趋势</h2><p id="history-caption">温度与湿度的历史读数</p></div><div class="table-actions"><label class="select-wrap"><span class="sr-only">历史记录范围</span><select id="record-limit"><option value="30">最近 30 条</option><option value="60">最近 60 条</option><option value="120">最近 120 条</option></select></label><button id="export" class="button" disabled><span data-icon="download"></span>导出 CSV</button></div></div>
+      <div class="history-grid">
+        <section class="panel history-chart-panel"><div class="panel-heading"><h2><span class="small-icon coral" data-icon="thermometer"></span>环境温度</h2><span class="unit-label">℃</span></div><div class="chart-wrap"><div id="chart-temp" class="history-chart" role="img" aria-label="环境温度历史曲线"></div><div id="empty-temp" class="chart-empty"><span class="empty-icon" data-icon="chart"></span><strong>等待环境温度数据</strong><p>设备上传数据后，变化趋势将在这里呈现</p></div></div></section>
+        <section class="panel history-chart-panel"><div class="panel-heading"><h2><span class="small-icon teal" data-icon="droplet"></span>相对湿度</h2><span class="unit-label">%RH</span></div><div class="chart-wrap"><div id="chart-hum" class="history-chart" role="img" aria-label="相对湿度历史曲线"></div><div id="empty-hum" class="chart-empty"><span class="empty-icon" data-icon="chart"></span><strong>等待相对湿度数据</strong><p>设备上传数据后，变化趋势将在这里呈现</p></div></div></section>
+      </div>
+      <div class="history-sync"><span data-icon="refresh"></span><span id="last-sync">正在连接数据服务…</span></div>
+      <footer class="page-footer"><span>SENSE <i>·</i> 物联网环境监测系统</span><span>开发者：<span th:text="${developerName}">肖肃</span> <i>·</i> 学号：<span th:text="${studentId}">202440700102</span></span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <noscript><div class="noscript">请启用 JavaScript，以查看实时数据和控制设备。</div></noscript>
+</body>
+</html>
